@@ -1,0 +1,9 @@
+.*/
+tmp/
+debug/
+
+*.aux
+*.glob
+*.vo
+*.vok
+*.vos
