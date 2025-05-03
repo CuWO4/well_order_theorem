@@ -173,8 +173,18 @@ Proof.
   reflexivity.
 Qed.
 
-(* it seems like we just need Extensional Axiom, but whatever. i'm not conservative logician *)
-Axiom CA : forall (T : Type) (S : Ensemble T), S <> Empty_set T -> exists x, S x.
+Lemma choose_from_non_empty :
+  forall (T : Type) (S : Ensemble T), S <> Empty_set T -> exists x, S x.
+Proof.
+  intros.
+  apply not_all_not_ex.
+  unfold not at 1. intros H_contra.
+  apply H.
+  apply Extensionality_Ensembles.
+  split; intros x Hx.
+  - contradict Hx. apply H_contra.
+  - contradiction.
+Qed.
 
 Theorem well_order_of_nat : forall S : Ensemble nat,
   S = Empty_set nat
@@ -199,7 +209,7 @@ Proof.
           apply H. exists n.
           split. - assumption. - assumption.
       }
-      destruct (CA nat S H_non_empty) as [s0 H_s0].
+      destruct (choose_from_non_empty nat S H_non_empty) as [s0 H_s0].
       assert (H_s0_nxt_not_in_T: ~ T (s0 ')). {
         unfold T. apply ex_not_not_all.
         exists s0.
